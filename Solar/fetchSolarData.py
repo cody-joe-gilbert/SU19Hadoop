@@ -87,9 +87,9 @@ def getURL(i, accessInfo, latitude, longitude, year, att, interval='60'):
 
 
 # If the csv file already exists, remove the old copy
-if os.path.exists(csvFile):
-    print("Output CSV file {csv} exists. Removing...".format(csv=csvFile))
-    os.remove(csvFile)
+#if os.path.exists(csvFile):
+#    print("Output CSV file {csv} exists. Removing...".format(csv=csvFile))
+#    os.remove(csvFile)
 # If there isn't already a list of completed regions, start one.
 if not os.path.exists(compList):
     with open(compList, 'w') as comp:
@@ -122,7 +122,7 @@ for i in range(len(regions)):
               " already completed. Skipping...")
         continue
     # Some Alaska values are outside the range of applicability
-    if lat_in > 60:
+    if (lat_in > 60 or lat_in < -20 or lon_in > -25 or lon_in < -175):
         print("Lat: {lat}".format(lat=lat_in) +
               " Long: {lon}".format(lon=lon_in) +
               " outside NREL US Data range. Skipping...")
@@ -151,6 +151,5 @@ for i in range(len(regions)):
                    str(lat_out) + '\t' +
                    str(lon_out) + '\t' +
                    str(year) + '\n')
-    break
 # Save the data schema for later use
 pd.DataFrame(rows.columns).to_csv('solarSchema.csv', header=False, index=False)
