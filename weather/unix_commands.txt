@@ -1,3 +1,0 @@
-# combining all text files and appending filename to each line
-
-find -type f -exec awk '{print $0 " " FILENAME}' {} + > ../combined.txt

@@ -1,11 +1,16 @@
-
+# since the original files are delimited by multiple spaces, we need to convert this to a comma delimiter before using Hive
 # PIG wrangling
 pig -x mapreduce
 
+# subset
 a = LOAD 'hdfs:/user/rf1316/subset.txt' as (fullrecord:chararray);  
 b = FOREACH a generate REPLACE(fullrecord, '\\s+', ',');
 STORE b INTO 'hdfs:/user/rf1316/subset_pig.txt' USING PigStorage (',');
 
+# full dataset
+a = LOAD 'hdfs:/user/rf1316/combined.txt' as (fullrecord:chararray);  
+b = FOREACH a generate REPLACE(fullrecord, '\\s+', ',');
+STORE b INTO 'hdfs:/user/rf1316/combined_pig' USING PigStorage (',');
 
 
 # login
@@ -16,19 +21,67 @@ use rf1316;
 # create scheme
 CREATE TABlE weather3 (year INT, month INT, day INT, hour INT, temp FLOAT, humid FLOAT, pressure FLOAT, winddir INT, windspeed FLOAT, skycond INT, precip1 INT, precip6 INT, station STRING) row format delimited fields terminated by ',';
 
+CREATE TABlE weather_full (year INT, month INT, day INT, hour INT, temp FLOAT, humid FLOAT, pressure FLOAT, winddir INT, windspeed FLOAT, skycond INT, precip1 INT, precip6 INT, station STRING) row format delimited fields terminated by ',';
+
 # load data
-load data inpath 'hdfs:/user/rf1316/sp.txt' overwrite into table weather3;
+load data inpath 'hdfs:/user/rf1316/subset_pig.txt' overwrite into table weather3;
+
+load data inpath 'hdfs:/user/rf1316/combined_pig' overwrite into table weather_full;
 
 # check table
 SELECT * FROM weather3 LIMIT 1;
+SELECT * FROM weather_full LIMIT 1;
 
 # dropping table
 DROP TABLE weather3;
 
+DROP TABLE weather_full;
+
 # output data
-INSERT OVERWRITE DIRECTORY 'hdfs:/user/rf1316/hiveres' 
+INSERT OVERWRITE DIRECTORY 'hdfs:/user/rf1316/res1' 
 ROW FORMAT DELIMITED
 FIELDS TERMINATED BY ','
 STORED AS TEXTFILE
-SELECT month, day, AVG(temp) from weather3 GROUP BY month, day;
+SELECT 
+    SUBSTR(year,0,3),
+    SUBSTR(station,3,12),
+    month,
+    MAX(CASE WHEN temp = '-9999' THEN NULL ELSE temp END),
+    MIN(CASE WHEN temp = '-9999' THEN NULL ELSE temp END),
+    AVG(CASE WHEN temp = '-9999' THEN NULL ELSE temp END),
+    MAX(CASE WHEN humid = '-9999' THEN NULL ELSE humid END),
+    MIN(CASE WHEN humid = '-9999' THEN NULL ELSE humid END),
+    AVG(CASE WHEN humid = '-9999' THEN NULL ELSE humid END),
+    MAX(CASE WHEN windspeed = '-9999' THEN NULL ELSE windspeed END),
+    MIN(CASE WHEN windspeed = '-9999' THEN NULL ELSE windspeed END),
+    AVG(CASE WHEN windspeed = '-9999' THEN 0 ELSE windspeed END),
+    MAX(CASE WHEN precip1 = '-9999' THEN NULL ELSE precip1 END),
+    MIN(CASE WHEN precip1 = '-9999' THEN NULL ELSE precip1 END),
+    AVG(CASE WHEN precip1 = '-9999' THEN 0 ELSE precip1 END),
+    MAX(CASE WHEN precip6 = '-9999' THEN NULL ELSE precip6 END),
+    MIN(CASE WHEN precip6 = '-9999' THEN NULL ELSE precip6 END),
+    AVG(CASE WHEN precip6 = '-9999' THEN 0 ELSE precip6 END)
+    
+FROM weather_full
+WHERE cast(SUBSTR(year,0,3) as int) >= 195
+GROUP BY SUBSTR(year,0,3), SUBSTR(station,3,12), month
+;
+
+
+# each row of the data looks like this:
+201,985460-99999,8,348.0,220.0,281.45093564582385,285.0,215.0,249.05893019038984,220.0,0.0,17.342688999547306,\N,\N,0.0,610,-1,4.473970122227252
+
+# napa's station_ids:
+# 724955-99999
+# 724955-93227
+
+# let's extract napa valley's data
+hfs -get res1
+cat res1/* | grep 724955-9 | sort > napa.txt
+
+# the file has 994714 rows on the level of decade-station-month, from this file we will use MapReduce to featurize the data on the station level
+
+
+
+
 
