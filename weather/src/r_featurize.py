@@ -57,8 +57,12 @@ for l in sys.stdin:
     if last_k and last_k != k:
         do_print(last_k, res_dict)
 
-        # resetting
+        # resetting, making sure the full dict is initialized
         res_dict = {}
+        for cur_m in month_str_order:
+            res_dict[cur_m] = {}
+            for cur_ofield in out_order:
+                res_dict[cur_m][cur_ofield] = None
 
     # handling a new value
     res_dict[cur_fields['month']] = {}
