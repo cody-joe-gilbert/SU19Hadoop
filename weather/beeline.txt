@@ -1,0 +1,34 @@
+
+# PIG wrangling
+pig -x mapreduce
+
+a = LOAD 'hdfs:/user/rf1316/subset.txt' as (fullrecord:chararray);  
+b = FOREACH a generate REPLACE(fullrecord, '\\s+', ',');
+STORE b INTO 'hdfs:/user/rf1316/subset_pig.txt' USING PigStorage (',');
+
+
+
+# login
+beeline
+!connect jdbc:hive2://babar.es.its.nyu.edu:10000/
+use rf1316;
+
+# create scheme
+CREATE TABlE weather3 (year INT, month INT, day INT, hour INT, temp FLOAT, humid FLOAT, pressure FLOAT, winddir INT, windspeed FLOAT, skycond INT, precip1 INT, precip6 INT, station STRING) row format delimited fields terminated by ',';
+
+# load data
+load data inpath 'hdfs:/user/rf1316/sp.txt' overwrite into table weather3;
+
+# check table
+SELECT * FROM weather3 LIMIT 1;
+
+# dropping table
+DROP TABLE weather3;
+
+# output data
+INSERT OVERWRITE DIRECTORY 'hdfs:/user/rf1316/hiveres' 
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE
+SELECT month, day, AVG(temp) from weather3 GROUP BY month, day;
+
