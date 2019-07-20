@@ -42,7 +42,7 @@ def do_print(key, results_dict):
     to_print = key + "\t"
     for m in month_str_order:
         for ofield in out_order:
-            to_print += results_dict[m][ofield] + ","
+            to_print += str(results_dict[m][ofield]) + ","
     print(to_print[:-1])
 
 
