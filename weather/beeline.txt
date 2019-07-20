@@ -81,7 +81,19 @@ cat res1/* | grep 724955-9 | sort > napa.txt
 
 # the file has 994714 rows on the level of decade-station-month, from this file we will use MapReduce to featurize the data on the station level
 
+# executing the featurize MR:
+hjs -files src/ -mapper src/m_featurize.sh -reducer src/r_featurize.sh -input res1 -output features
 
+
+
+# extracting napa features:
+cat features/* | grep 199,724955- > napa1990.txt
+cat features/* | grep 200,724955- > napa2000.txt
+cat features/* | grep 201,724955- > napa2010.txt
+
+
+# for each line in features, compute the cosine similarity to the 3 napas, then output results
+hjs -files src/ -mapper src/m_cos.sh -reducer src/r_cos.sh -input features -output cos_sim
 
 
 
