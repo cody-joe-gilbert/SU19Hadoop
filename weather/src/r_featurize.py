@@ -39,35 +39,41 @@ res_dict = {}
 
 
 def do_print(key, results_dict):
-    to_print = key + "\t"
-    for m in month_str_order:
-        for ofield in out_order:
-            to_print += str(results_dict[m][ofield]) + ","
-    print(to_print[:-1])
+    try:
+        to_print = key + "\t"
+        for m in month_str_order:
+            for ofield in out_order:
+                to_print += str(results_dict[m][ofield]) + ","
+        print(to_print[:-1])
+    except:
+        pass
 
 
 for l in sys.stdin:
     k, v = l.strip().split("\t")
     a = v.split(",")
 
-    # load fields
-    cur_fields = dict(zip(col_order[2:], a))
+    try:
+        # load fields
+        cur_fields = dict(zip(col_order[2:], a))
 
-    # new k branche
-    if last_k and last_k != k:
-        do_print(last_k, res_dict)
+        # new k branche
+        if last_k and last_k != k:
+            do_print(last_k, res_dict)
 
-        # resetting, making sure the full dict is initialized
-        res_dict = {}
-        for cur_m in month_str_order:
-            res_dict[cur_m] = {}
-            for cur_ofield in out_order:
-                res_dict[cur_m][cur_ofield] = None
+            # resetting, making sure the full dict is initialized
+            res_dict = {}
+            for cur_m in month_str_order:
+                res_dict[cur_m] = {}
+                for cur_ofield in out_order:
+                    res_dict[cur_m][cur_ofield] = None
 
-    # handling a new value
-    res_dict[cur_fields['month']] = {}
-    for cur_ofield in out_order:
-        res_dict[cur_fields['month']][cur_ofield] = cur_fields[cur_ofield]
+        # handling a new value
+        res_dict[cur_fields['month']] = {}
+        for cur_ofield in out_order:
+            res_dict[cur_fields['month']][cur_ofield] = cur_fields[cur_ofield]
+    except:
+        pass
 
     last_k = k
 
