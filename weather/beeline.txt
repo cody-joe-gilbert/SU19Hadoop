@@ -93,7 +93,7 @@ cat features/* | grep 201,724955- > napa2010.txt
 
 
 # for each line in features, compute the cosine similarity to the 3 napas, then output results
-hjs -files src/ -mapper src/m_cos.sh -reducer src/r_cos.sh -input features -output cos_sim
+hjs -files src_cos/ -mapper src_cos/m_cos.sh -reducer src_cos/r_cos.sh -input features -output cos_sim
 
 
 
