@@ -1,0 +1,581 @@
+*************************
+*************************
+~~Results for Year~~ 
+
+Numerical results:
+Min: 2017.0
+Max: 2017.0
+Mean: 2017.0
+Variance: 0.0
+Standard Dev: 0.0
+
+ No strings found 
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Month~~ 
+
+Numerical results:
+Min: 1.0
+Max: 12.0
+Mean: 6.52602739726
+Variance: 11.888
+Standard Dev: 3.448
+
+ No strings found 
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Day~~ 
+
+Numerical results:
+Min: 1.0
+Max: 31.0
+Mean: 15.7205479452
+Variance: 77.374
+Standard Dev: 8.796
+
+ No strings found 
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Hour~~ 
+
+Numerical results:
+Min: 0.0
+Max: 23.0
+Mean: 11.5
+Variance: 47.917
+Standard Dev: 6.922
+
+ No strings found 
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Minute~~ 
+
+Numerical results:
+Min: 30.0
+Max: 30.0
+Mean: 30.0
+Variance: 0.0
+Standard Dev: 0.0
+
+ No strings found 
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for GHI~~ 
+
+Numerical results:
+Min: 0.0
+Max: 1137.0
+Mean: 187.905806502
+Variance: 75360.492
+Standard Dev: 274.519
+
+ No strings found 
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for DHI~~ 
+
+Numerical results:
+Min: 0.0
+Max: 682.0
+Mean: 65.4853656213
+Variance: 9823.502
+Standard Dev: 99.114
+
+ No strings found 
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for DNI~~ 
+
+Numerical results:
+Min: 0.0
+Max: 1121.0
+Mean: 216.005716829
+Variance: 105941.918
+Standard Dev: 325.487
+
+ No strings found 
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Wind Speed~~ 
+No numeric values.
+
+Sting Counts: 
+m/s 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Temperature~~ 
+
+Numerical results:
+Min: -37.0
+Max: 51.0
+Mean: 12.6915906808
+Variance: 121.953
+Standard Dev: 11.043
+
+ No strings found 
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Solar Zenith Angle~~ 
+
+Numerical results:
+Min: 0.09
+Max: 179.56
+Mean: 89.6949256499
+Variance: 1362.411
+Standard Dev: 36.911
+
+ No strings found 
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Source~~ 
+No numeric values.
+
+Sting Counts: 
+NSRDB 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Location ID~~ 
+
+Numerical results:
+Min: 9287.0
+Max: 1532894.0
+Mean: 735325.504636
+Variance: 1.1191864313e+11
+Standard Dev: 334542.438
+
+ No strings found 
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for City~~ 
+No numeric values.
+
+Sting Counts: 
+- 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for State~~ 
+No numeric values.
+
+Sting Counts: 
+- 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Country~~ 
+No numeric values.
+
+Sting Counts: 
+- 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Latitude~~ 
+
+Numerical results:
+Min: -14.27
+Max: 59.77
+Mean: 38.4897404206
+Variance: 27.281
+Standard Dev: 5.223
+
+ No strings found 
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Longitude~~ 
+
+Numerical results:
+Min: -170.38
+Max: -64.82
+Mean: -94.1067243503
+Variance: 183.406
+Standard Dev: 13.543
+
+ No strings found 
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Time Zone~~ 
+
+Numerical results:
+Min: 0.0
+Max: 0.0
+Mean: 0.0
+Variance: 0.0
+Standard Dev: 0.0
+
+ No strings found 
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Elevation~~ 
+
+Numerical results:
+Min: -45.0
+Max: 3649.0
+Mean: 518.554697157
+Variance: 357796.922
+Standard Dev: 598.161
+
+ No strings found 
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Local Time Zone~~ 
+
+Numerical results:
+Min: -11.0
+Max: -4.0
+Mean: -6.01019777503
+Variance: 0.893
+Standard Dev: 0.945
+
+ No strings found 
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Clearsky DHI Units~~ 
+No numeric values.
+
+Sting Counts: 
+w/m2 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Clearsky DNI Units~~ 
+No numeric values.
+
+Sting Counts: 
+w/m2 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Clearsky GHI Units~~ 
+No numeric values.
+
+Sting Counts: 
+w/m2 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Dew Point Units~~ 
+No numeric values.
+
+Sting Counts: 
+c 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for DHI Units~~ 
+No numeric values.
+
+Sting Counts: 
+w/m2 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for DNI Units~~ 
+No numeric values.
+
+Sting Counts: 
+w/m2 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for GHI Units~~ 
+No numeric values.
+
+Sting Counts: 
+w/m2 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Solar Zenith Angle Units~~ 
+No numeric values.
+
+Sting Counts: 
+Degree 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Temperature Units~~ 
+No numeric values.
+
+Sting Counts: 
+c 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Pressure Units~~ 
+No numeric values.
+
+Sting Counts: 
+mbar 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Relative Humidity Units~~ 
+No numeric values.
+
+Sting Counts: 
+% 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Precipitable Water Units~~ 
+No numeric values.
+
+Sting Counts: 
+cm 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Wind Direction Units~~ 
+No numeric values.
+
+Sting Counts: 
+Degrees 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Cloud Type -15~~ 
+No numeric values.
+
+ No strings found 
+
+No. of Nulls: 28347360
+*************************
+*************************
+~~Results for Cloud Type 0~~ 
+No numeric values.
+
+Sting Counts: 
+Clear 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Cloud Type 1~~ 
+No numeric values.
+
+Sting Counts: 
+Probably Clear 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Cloud Type 2~~ 
+No numeric values.
+
+Sting Counts: 
+Fog 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Cloud Type 3~~ 
+No numeric values.
+
+Sting Counts: 
+Water 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Cloud Type 4~~ 
+No numeric values.
+
+Sting Counts: 
+Super-Cooled Water 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Cloud Type 5~~ 
+No numeric values.
+
+Sting Counts: 
+Mixed 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Cloud Type 6~~ 
+No numeric values.
+
+Sting Counts: 
+Opaque Ice 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Cloud Type 7~~ 
+No numeric values.
+
+Sting Counts: 
+Cirrus 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Cloud Type 8~~ 
+No numeric values.
+
+Sting Counts: 
+Overlapping 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Cloud Type 9~~ 
+No numeric values.
+
+Sting Counts: 
+Overshooting 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Cloud Type 10~~ 
+No numeric values.
+
+Sting Counts: 
+Unknown 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Cloud Type 11~~ 
+No numeric values.
+
+Sting Counts: 
+Dust 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Cloud Type 12~~ 
+No numeric values.
+
+Sting Counts: 
+Smoke 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Fill Flag 0~~ 
+No numeric values.
+
+ No strings found 
+
+No. of Nulls: 28347360
+*************************
+*************************
+~~Results for Fill Flag 1~~ 
+No numeric values.
+
+Sting Counts: 
+Missing Image 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Fill Flag 2~~ 
+No numeric values.
+
+Sting Counts: 
+Low Irradiance 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Fill Flag 3~~ 
+No numeric values.
+
+Sting Counts: 
+Exceeds Clearsky 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Fill Flag 4~~ 
+No numeric values.
+
+Sting Counts: 
+Missing CLoud Properties 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Fill Flag 5~~ 
+No numeric values.
+
+Sting Counts: 
+Rayleigh Violation 		 28347360
+
+No. of Nulls: 0
+*************************
+*************************
+~~Results for Surface Albedo Units~~ 
+No numeric values.
+
+ No strings found 
+
+No. of Nulls: 28347360
+*************************
+*************************
+~~Results for Version~~ 
+No numeric values.
+
+Sting Counts: 
+v3.0.0 		 28347360
+
+No. of Nulls: 0
