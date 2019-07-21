@@ -45,7 +45,10 @@ SELECT co.mukey,
   SUM(COALESCE(cow.co_wt * cha.co_om, 0)) / SUM(CASE WHEN cha.co_om IS NULL THEN 0 ELSE cow.co_wt END) AS mu_om,
   SUM(COALESCE(cow.co_wt * cha.co_claytotal, 0)) / SUM(CASE WHEN cha.co_claytotal IS NULL THEN 0 ELSE cow.co_wt END) AS mu_claytotal,
   SUM(COALESCE(cow.co_wt * cha.co_silttotal, 0)) / SUM(CASE WHEN cha.co_silttotal IS NULL THEN 0 ELSE cow.co_wt END) AS mu_silttotal,
-  SUM(COALESCE(cow.co_wt * cha.co_sandtotal, 0)) / SUM(CASE WHEN cha.co_sandtotal IS NULL THEN 0 ELSE cow.co_wt END) AS mu_sandtotal
+  SUM(COALESCE(cow.co_wt * cha.co_sandtotal, 0)) / SUM(CASE WHEN cha.co_sandtotal IS NULL THEN 0 ELSE cow.co_wt END) AS mu_sandtotal,
+  SUM(COALESCE(cow.co_wt * co.slope_r, 0)) / SUM(CASE WHEN co.slope_r IS NULL THEN 0 ELSE cow.co_wt END) AS mu_slope,
+  SUM(COALESCE(cow.co_wt * co.tfact, 0)) / SUM(CASE WHEN co.tfact IS NULL THEN 0 ELSE cow.co_wt END) AS mu_tfact,
+  SUM(COALESCE(cow.co_wt * co.elev_r, 0)) / SUM(CASE WHEN co.elev_r IS NULL THEN 0 ELSE cow.co_wt END) AS mu_elev
 FROM component co 
 INNER JOIN component_weights cow ON co.cokey = cow.cokey 
 LEFT JOIN chorizon_agg cha ON co.cokey = cha.cokey 
@@ -60,7 +63,10 @@ SELECT mu.lkey,
   SUM(COALESCE(muw.mu_wt * coa.mu_om, 0)) / SUM(CASE WHEN coa.mu_om IS NULL THEN 0 ELSE muw.mu_wt END) AS om, 
   SUM(COALESCE(muw.mu_wt * coa.mu_claytotal, 0)) / SUM(CASE WHEN coa.mu_claytotal IS NULL THEN 0 ELSE muw.mu_wt END) AS claytotal, 
   SUM(COALESCE(muw.mu_wt * coa.mu_silttotal, 0)) / SUM(CASE WHEN coa.mu_silttotal IS NULL THEN 0 ELSE muw.mu_wt END) AS silttotal, 
-  SUM(COALESCE(muw.mu_wt * coa.mu_sandtotal, 0)) / SUM(CASE WHEN coa.mu_sandtotal IS NULL THEN 0 ELSE muw.mu_wt END) AS sandtotal 
+  SUM(COALESCE(muw.mu_wt * coa.mu_sandtotal, 0)) / SUM(CASE WHEN coa.mu_sandtotal IS NULL THEN 0 ELSE muw.mu_wt END) AS sandtotal, 
+  SUM(COALESCE(muw.mu_wt * coa.mu_slope, 0)) / SUM(CASE WHEN coa.mu_slope IS NULL THEN 0 ELSE muw.mu_wt END) AS slope,
+  SUM(COALESCE(muw.mu_wt * coa.mu_tfact, 0)) / SUM(CASE WHEN coa.mu_tfact IS NULL THEN 0 ELSE muw.mu_wt END) AS tfact,
+  SUM(COALESCE(muw.mu_wt * coa.mu_elev, 0)) / SUM(CASE WHEN coa.mu_elev IS NULL THEN 0 ELSE muw.mu_wt END) AS elev
 FROM mapunit mu
 INNER JOIN mapunit_weights muw ON mu.mukey = muw.mukey
 LEFT JOIN component_agg coa ON mu.mukey = coa.mukey
@@ -70,7 +76,7 @@ GROUP BY mu.lkey;
 CREATE TABLE legend_summary AS 
 SELECT l.lkey, l.areasymbol, l.areaname, l.mlraoffice, l.areaacres, 
   (l.mbrminx + l.mbrmaxx) / 2.0 AS longitude, (l.mbrminy + l.mbrmaxx) / 2.0 AS latitude, 
-  ph1to1h2o, cec7, awc, om, claytotal, silttotal, sandtotal
+  ph1to1h2o, cec7, awc, om, claytotal, silttotal, sandtotal, slope, tfact, elev
 FROM legend l 
 LEFT JOIN mapunit_agg mua ON l.lkey = mua.lkey;  
 
@@ -83,11 +89,12 @@ STORED as textfile
 AS
 SELECT 'lkey' AS lkey, 'areasymbol' AS areasymbol, 'areaname' AS areaname, 'mlraoffice' AS mlraoffice, 'areaacres' AS areaacres, 
 'longitude' AS longitude, 'latitude' AS latitude,
-'ph1to1h2o' AS ph1to1h2o, 'cec7' AS cec7, 'awc' AS awc, 'om' AS om, 'claytotal' AS claytotal, 'silttotal' AS silttotal, 'sandtotal' AS sandtotal;
+'ph1to1h2o' AS ph1to1h2o, 'cec7' AS cec7, 'awc' AS awc, 'om' AS om, 'claytotal' AS claytotal, 'silttotal' AS silttotal, 'sandtotal' AS sandtotal,
+'slope' AS slope, 'tfact' AS tfact, 'elev' AS elev;
 
 INSERT INTO legend_summary_csv
 SELECT lkey, areasymbol, areaname, mlraoffice, areaacres, longitude, latitude, 
-  ph1to1h2o, cec7, awc, om, claytotal, silttotal, sandtotal
+  ph1to1h2o, cec7, awc, om, claytotal, silttotal, sandtotal, slope, tfact, elev
 FROM legend_summary;
 
 hadoop fs -cat hdfs://dumbo/user/hive/warehouse/yjn214.db/legend_summary_csv/* > $HOME/rbda-proj/legend_summary_output.csv
