@@ -22,7 +22,7 @@ for line in sys.stdin:
 	else: 
 		# assuming current field is not just initial None, print results of previous field 
 		if cur_field is not None: 
-			print("%s\t%s\t%s\t%s" % (cur_field, cur_min, cur_max, cur_null))
+			print("%s|%s|%s|%s" % (cur_field, cur_min, cur_max, cur_null))
 		# swap new field as current and update its summary statistics  
 		cur_field = field 
 		if val == 'NULL':
