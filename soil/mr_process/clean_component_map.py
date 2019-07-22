@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+# note: data provided is very clean (no unexpected values) except there might be null values. thus cleaning process here simply involves
+# 1) excluding lines with null values in required_cols (these are critical fields like primary key, foreign key, and weighting factors)
+# 2) outputing only cols necessary for the analytic (these are required_cols + features)
+
 import sys
 
 output_cols = {

@@ -17,4 +17,3 @@ for line in sys.stdin:
 		else:
 			val = l[i]
 		print("%s\t%s" % (output_cols[i], val))
-
