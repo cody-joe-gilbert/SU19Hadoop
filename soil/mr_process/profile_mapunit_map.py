@@ -3,9 +3,9 @@
 import sys
 
 output_cols = {
-	0: mukey,
-	3: muacres,
-	7: lkey
+	0: 'mukey',
+	3: 'muacres',
+	7: 'lkey'
 	} 
 
 for line in sys.stdin:
