@@ -3,10 +3,12 @@
 import sys
 
 output_cols = {
-	0: 'mukey',
-	3: 'muacres',
-	7: 'lkey'
-	} 
+	0: 'cokey',
+	2: 'mukey',
+	3: 'comppct_r',
+	5: 'slope_r',
+	11: 'tfact',
+	15: 'elev_r'} 
 
 for line in sys.stdin:
 	l = line.strip().split("|")
@@ -17,4 +19,3 @@ for line in sys.stdin:
 		else:
 			val = l[i]
 		print("%s\t%s" % (output_cols[i], val))
-
