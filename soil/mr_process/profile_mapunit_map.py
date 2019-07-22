@@ -3,8 +3,8 @@
 import sys
 
 output_cols = {
-	0: mukey
-	3: muacres
+	0: mukey,
+	3: muacres,
 	7: lkey
 	} 
 
