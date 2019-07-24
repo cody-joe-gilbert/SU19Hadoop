@@ -5,13 +5,16 @@ R. Feng, C. Gilbert, G. Ng
 
 Contains Python wrappers for various Hadoop tools
 
+function impRunClass: Unpickles and returns an existing runHadoop class
 class runHadoop: contains execution and testing methods for MapReduce
 
 """
 import subprocess
 import sys
 import os
+import shutil
 import time
+import pickle
 from datetime import datetime
 from shutil import copyfile
 
@@ -21,6 +24,21 @@ if float(str(sys.version_info[0]) + "." + str(sys.version_info[1])) < 2.7:
     message = ("Must be using Python 2.7 or above. \n" +
                "For Dumbo users, execute \"module load python/gnu/2.7.11\"")
     raise Exception(message)
+
+
+def impRunClass(filename='./runHadoopPickle.pkl'):
+    '''
+    Unpickles the HadoopTools runHadoop class instance from a pickle file
+    given by filename. Allows the runHadoop class and associated objects
+    to be included in the distributed MapReduce operations
+    ~Input~
+    filename: pathname of the pickle object containing the runHadoop class
+    ~Output~
+    RHC: the unpickled runHadoop class
+    '''
+    with open(filename, 'rb') as pf:
+        RHC = pickle.load(pf)
+    return(RHC)
 
 
 class runHadoop():
@@ -46,9 +64,12 @@ class runHadoop():
         self.mapper = None
         self.reducer = None
         self.proc = None
+        self.pickleName = './runHadoopPickle.pkl'
         self.subTime = None
-        self.files = ''
+        self.included = None
+        self.checkScriptFiles = True
         self.DEVNULL = open(os.devnull, 'w')  # stdout trash location
+        self.files = ''
 
 
     def testCodes(self, inpFile, mapper, reducer, local=False):
@@ -68,6 +89,12 @@ class runHadoop():
         self.inpFile = inpFile
         self.mapper = mapper
         self.reducer = reducer
+
+        # Include this class instance in the MR job
+        if self.included is not None:
+            with open(self.pickleName, 'wb') as pf:
+                pickle.dump(self.included, pf)
+            self.files += self.pickleName + ","
 
         # Copy over test input
         if not local:
@@ -113,6 +140,17 @@ class runHadoop():
         self.inpFile = inpFile
         self.mapper = mapper
         self.reducer = reducer
+
+        # Include this class instance in the MR job
+        if self.included is not None:
+            with open(self.pickleName, 'wb') as pf:
+                pickle.dump(self.included, pf)
+            self.files += self.pickleName + ","
+
+        # Check MR run scripts for proper headers
+        if self.checkScriptFiles:
+            self.checkScripts()
+
         self.files = self.files + mapper + ',' + reducer
         if NumReducers is not None:
             self.NumReducers = NumReducers
@@ -213,6 +251,55 @@ class runHadoop():
         subprocess.call(['hdfs', 'dfs', '-getmerge', self.outFile, outputFile],
                         stdout=self.DEVNULL,
                         stderr=subprocess.STDOUT)
+
+    def include(self, name, obj):
+        '''
+        Includes a Python object in MapReduce execution by passing it along
+        with the class pickle
+        ~Input~
+        name: name of the object within the self.include dictionary.
+        obj: Any pickle-able (serializable) object
+        ~Output~
+        self.included: updates the existing runHadoop to include the object
+            in the output pickle
+        '''
+        if self.included is None:
+            self.included = {name: obj}
+        else:
+            self.included.update({name: obj})
+
+    def checkScripts(self, scr=None):
+        '''
+        Hadoop requires a specific header to be added to the mapper and
+        reducer scripts and must have \n Unix EOLs instead of \r\n Windows
+        EOLs. This function screens will add the header and convert the EOLs
+        prior to Hadoop submittal.
+        ~Input~
+        scr: Input pathname to script for check. If not provided, checks
+        self.mapper and self.reducer.
+        '''
+        if scr is None:
+            if self.verbose:
+                print('Checking mapper...')
+            self.checkScripts(self.mapper)
+            if self.verbose:
+                print('Checking reducer...')
+            self.checkScripts(self.reducer)
+        else:
+            if self.verbose:
+                print('Checking input script: %s ...' % scr)
+            if not os.path.exists(scr):
+                raise ValueError("Input script not found!")
+            with open(scr, 'r+') as rf, open('tempFile.txt', 'w') as tf:
+                tf.write('#!/usr/bin/python\n')
+                for line in rf:
+                    if line.strip() == '#!/usr/bin/python':
+                        continue
+                    tf.write(line.rstrip() + '\n')
+            # Swap the new corrected file with the old one
+            os.remove(scr)
+            shutil.move('tempFile.txt', scr)
+            os.system('chmod 755 %s' % scr)
 
     def __exit__(self):
         # Ensure the devnull "file" gets closed
