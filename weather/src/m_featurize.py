@@ -9,18 +9,23 @@ col_order = [
     'max_temp',
     'min_temp',
     'avg_temp',
+    'qq_range_temp',
     'max_humid',
     'min_humid',
     'avg_humid',
+    'qq_range_humid',
     'max_ws',
     'min_ws',
     'avg_ws',
+    'qq_range_ws',
     'max_p1',
     'min_p1',
     'avg_p1',
+    'qq_range_p1',
     'max_p6',
     'min_p6',
-    'avg_p6'
+    'avg_p6',
+    'qq_range_p6'
 ]
 
 for l in sys.stdin:
