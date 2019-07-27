@@ -14,7 +14,7 @@ def np_arr_to_str(np_arr):
 
 def do_print(cur_col, orig_key, norm_arr):
     for cur_val in norm_arr:
-        print("%s, %s, %s" % (orig_key, cur_col, cur_val))
+        print("%s\t%s\t%s" % (orig_key, cur_col, cur_val))
 
 
 last_k = None
