@@ -12,13 +12,14 @@ def np_arr_to_str(np_arr):
     return rt_str[:-1]
 
 
-def do_print(cur_col, orig_key, norm_arr):
-    for cur_val in norm_arr:
-        print("%s\t%s\t%s" % (orig_key, cur_col, cur_val))
+def do_print(cur_col, orig_key_arr, norm_arr):
+    for i, cur_val in enumerate(norm_arr):
+        print("%s\t%s\t%s" % (orig_key_arr[i], cur_col, cur_val))
 
 
 last_k = None
 all_current_vals = np.array([])
+orig_key_arr = np.array([])
 orig_key = None
 norm_arr = None
 
@@ -34,13 +35,15 @@ for l in sys.stdin:
             norm_arr = (all_current_vals - np.mean(all_current_vals))
         else:
             norm_arr = (all_current_vals - np.mean(all_current_vals)) / cur_std
-        do_print(last_k, orig_key, norm_arr)
+        do_print(last_k, orig_key_arr, norm_arr)
 
         # resetting
         all_current_vals = np.array([])
+        orig_key_arr = np.array([])
 
     # handling a new value
     all_current_vals = np.append(all_current_vals, float(val))
+    orig_key_arr = np.append(orig_key_arr, str(orig_key))
 
     last_k = k
 
