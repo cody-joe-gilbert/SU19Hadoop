@@ -24,23 +24,30 @@ norm_arr = None
 
 for l in sys.stdin:
     # k = column number
-    k, v = l.strip().split("\t")
-    val, orig_key = v.split(",")
+    k, val, orig_key = l.strip().split("\t")
 
     if last_k and last_k != k:
         # deal with the full key
-        norm_arr = (all_current_vals - np.mean(all_current_vals)) / np.std(all_current_vals)
+        cur_std = np.std(all_current_vals)
+        if cur_std == 0:
+            norm_arr = (all_current_vals - np.mean(all_current_vals))
+        else:
+            norm_arr = (all_current_vals - np.mean(all_current_vals)) / cur_std
         do_print(k, orig_key, norm_arr)
 
         # resetting
         all_current_vals = np.array([])
 
     # handling a new value
-    all_current_vals = np.append(all_current_vals, val)
+    all_current_vals = np.append(all_current_vals, float(val))
 
     last_k = k
 
 if last_k:
     # print last key
-    norm_arr = (all_current_vals - np.mean(all_current_vals)) / np.std(all_current_vals)
+    cur_std = np.std(all_current_vals)
+    if cur_std == 0:
+        norm_arr = (all_current_vals - np.mean(all_current_vals))
+    else:
+        norm_arr = (all_current_vals - np.mean(all_current_vals)) / cur_std
     do_print(last_k, orig_key, norm_arr)
