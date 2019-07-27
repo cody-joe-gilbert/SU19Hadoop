@@ -46,7 +46,8 @@ def do_print(key, results_dict):
         for m in month_str_order:
             for ofield in out_order:
                 to_print += str(results_dict[m][ofield]) + ","
-        print(to_print[:-1])
+        if '\\N' not in to_print and 'None' not in to_print:
+            print(to_print[:-1])
     except:
         pass
 
