@@ -24,7 +24,8 @@ norm_arr = None
 
 for l in sys.stdin:
     # k = column number
-    k, val, orig_key = l.strip().split("\t")
+    k, v = l.strip().split("\t")
+    val, orig_key = v.split("|")
 
     if last_k and last_k != k:
         # deal with the full key
@@ -33,7 +34,7 @@ for l in sys.stdin:
             norm_arr = (all_current_vals - np.mean(all_current_vals))
         else:
             norm_arr = (all_current_vals - np.mean(all_current_vals)) / cur_std
-        do_print(k, orig_key, norm_arr)
+        do_print(last_k, orig_key, norm_arr)
 
         # resetting
         all_current_vals = np.array([])
