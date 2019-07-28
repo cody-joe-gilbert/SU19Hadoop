@@ -1,0 +1,3 @@
+This subdirectory contains two subfolders: 
+- hive_featurize: loads the 4 cleaned soil tables (legend, mapunit, component, chorizon) into Hive to compute table joins and aggregations to obtain each soil area's aggregate features 
+- mr_cos_sim: runs a map-only job to compute cosine similarity between Napa's features (hard-coded into the script) against other 3K+ soil regions to obtain each region's soil similarity with respect to Napa  
