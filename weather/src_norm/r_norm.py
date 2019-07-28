@@ -54,4 +54,4 @@ if last_k:
         norm_arr = (all_current_vals - np.mean(all_current_vals))
     else:
         norm_arr = (all_current_vals - np.mean(all_current_vals)) / cur_std
-    do_print(last_k, orig_key, norm_arr)
+    do_print(last_k, orig_key_arr, norm_arr)
