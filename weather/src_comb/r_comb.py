@@ -30,7 +30,7 @@ for l in sys.stdin:
 
     if last_k and last_k != k:
         # deal with the full key
-        do_print(k, col_arr, val_arr)
+        do_print(last_k, col_arr, val_arr)
 
         # resetting
         col_arr = np.array([])
@@ -43,4 +43,4 @@ for l in sys.stdin:
     last_k = k
 
 if last_k:
-    do_print(k, col_arr, val_arr)
+    do_print(last_k, col_arr, val_arr)
