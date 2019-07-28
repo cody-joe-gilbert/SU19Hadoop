@@ -3,11 +3,10 @@
 import sys
 import numpy as np
 
-
 def np_arr_to_str(np_arr):
     rt_str = ''
     for cur_v in np_arr:
-        rt_str += str(cur_v) + ","
+        rt_str += str(cur_v) + "\t"
     return rt_str[:-1]
 
 
@@ -30,7 +29,7 @@ for l in sys.stdin:
 
     if last_k and last_k != k:
         # deal with the full key
-        do_print(last_k, col_arr, val_arr)
+        do_print(k, col_arr, val_arr)
 
         # resetting
         col_arr = np.array([])
@@ -43,4 +42,4 @@ for l in sys.stdin:
     last_k = k
 
 if last_k:
-    do_print(last_k, col_arr, val_arr)
+    do_print(k, col_arr, val_arr)
