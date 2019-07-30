@@ -1,0 +1,16 @@
+hadoop jar /opt/cloudera/parcels/CDH/lib/hadoop-mapreduce/hadoop-streaming.jar \
+-D mapreduce.job.reduces=1 \
+-files src/ \
+-mapper src/cos_sim_map.sh \
+-input hdfs://dumbo/user/hive/warehouse/yjn214.db/soil_features_local \
+-output hdfs://dumbo/user/yjn214/rbda-proj/soil_cos_sim
+
+hadoop jar /opt/cloudera/parcels/CDH/lib/hadoop-mapreduce/hadoop-streaming.jar \
+-D mapreduce.job.reduces=1 \
+-files src/ \
+-mapper src/cos_sim_map.sh \
+-input hdfs://dumbo/user/yjn214/rbda-proj/soil_features_local_no_header \
+-output hdfs://dumbo/user/yjn214/rbda-proj/soil_cos_sim_test
+
+
+
