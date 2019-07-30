@@ -19,13 +19,12 @@ required_cols = {
 	}
 
 for line in sys.stdin:
-	l = line.split("|")
 
-	# if row is missing a required field, filter out the row  
-	if '' in [l[i] for i in required_cols.keys()]:
-		pass 
+	# strip stdin and split into a list of column fields 
+	l = line.strip().split("|")
 
-	# else output the cols that we want to keep 
-	else:
+	# check that all required fields are present
+	if '' not in [l[i] for i in required_cols.keys()]:
+		# if so, print output fields to std_out  
 		output_vals = [l[i] for i in output_cols.keys()]
 		print("|".join(output_vals))
