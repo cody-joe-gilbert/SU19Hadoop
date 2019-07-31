@@ -22,7 +22,7 @@ v_napa = str_to_np(napa)
 
 for l in sys.stdin:
     vals = l.strip().split(',')
-    k = vals[0] 
+    k = vals[0].strip() 
     v = ",".join(vals[1:]) # convert back to string to conform to Rong's data format 
     if 'None' not in v and '\\N' not in v:
         np_v = str_to_np(v)
