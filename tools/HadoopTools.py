@@ -113,7 +113,7 @@ class runHadoop():
             print(cmd)
         # Execute shell command
         os.system(cmd)
-        cmd = ('cat testInput.txt | python ' + self.mapper + ' | sort' +
+        cmd = ('cat testInput.txt | python ' + self.mapper + ' | sort -k 1,1' +
                ' | python ' + self.reducer + ' &> testRedOutput.txt')
         if self.verbose:
             print('Running the following test code:')

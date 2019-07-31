@@ -41,7 +41,7 @@ USA = world.query('name == "United States"')
 contiguous_usa = geopandas.read_file(geoplot.datasets.get_path('contiguous_usa'))
 proj = gcrs.AlbersEqualArea(central_longitude=-98, central_latitude=39.5)
 
-ax = geoplot.voronoi(gdf.head(3150), projection=proj,
+ax = geoplot.voronoi(gdf.head(3000), projection=proj,
                      clip=USA.simplify(0.01),
                      hue='CosSimScaled', figsize=(15, 15),
                      cmap='Reds', k=None,

@@ -12,12 +12,19 @@ Lat-Lon_2
 ...
 
 This data will be used to calculate difference measures between a given point
-and the rest of the data
+and the rest of the data. 
+
+After featurizing and standardizing the data, this script
+will then find the Napa Valley record and create a cosine similarity
+measure between Napa and every other record, producing a single
+set of values for merging together for a single regional index.
+
 
 @author: Cody Gilbert
 """
 
 import HadoopTools as ht
+import subprocess
 from findEntry import findEntry
 from cosineSim import cosineSim
 
@@ -95,24 +102,69 @@ months = {1: "JAN",
 runner = ht.runHadoop()
 runner.verbose = False
 
-# Run first-pass MapReduce execution
-#inputFile = '/user/cjg507/solarData.csv'
-#widenMapScript = './widenDataMap.py'
-#widenRedScript = './widenDataRed.py'
-#runner = ht.runHadoop()
-#runner.outputLogFile = './widendata.log'
-#runner.include('schema', schema)
-#runner.include('months', months)
-#runner.MapReduce(inpFile=inputFile,
-#                 mapper=widenMapScript,
-#                 reducer=widenRedScript,
-#                 outFile='widenedSolarData',
-#                 NumReducers=32)
-#runner.tail()
+# Run first-pass Widen MapReduce execution
+inputFile = '/user/cjg507/solarData.csv'
+widenMapScript = './widenDataMap.py'
+widenRedScript = './widenDataRed.py'
+runner = ht.runHadoop()
+runner.outputLogFile = './widendata.log'
+runner.include('schema', schema)
+runner.include('months', months)
+runner.MapReduce(inpFile=inputFile,
+                mapper=widenMapScript,
+                reducer=widenRedScript,
+                outFile='widenedSolarData',
+                NumReducers=32)
+runner.tail()
+
+# Standardize the data
+# Run first-pass MapReduce standardizer execution
+# Broken from standard form to suppose shell script passing
+inputFile = 'widenedSolarData'
+MapScript = 'src_norm/m_norm.sh'
+RedScript = 'src_norm/r_norm.sh'
+folderFile = 'src_norm/'
+outFile='standardSolarData'
+outputLogFile = './standardData.log'
+hLibPath = '/opt/cloudera/parcels/CDH-5.15.0-1.cdh5.15.0.p0.21/lib'
+mrStreaming = hLibPath + '/hadoop-mapreduce/hadoop-streaming.jar'
+args = ['hadoop jar ' + mrStreaming +
+                ' -Dmapreduce.job.reduces=' + "32" +
+                ' -files ' + folderFile +
+                ' -input ' + inputFile +
+                ' -output ' + outFile +
+                ' -mapper ' + MapScript +
+                ' -reducer ' + RedScript]
+subprocess.check_call(args, shell=True)
+
+# # Run second-pass MapReduce execution to combine standard data
+inputFile = 'widenedSolarData'
+MapScript = 'src_norm/m_norm.sh'
+RedScript = 'src_norm/r_norm.sh'
+folderFile = 'src_norm/'
+outFile='standardSolarData'
+outputLogFile = './standardData.log'
+hLibPath = '/opt/cloudera/parcels/CDH-5.15.0-1.cdh5.15.0.p0.21/lib'
+mrStreaming = hLibPath + '/hadoop-mapreduce/hadoop-streaming.jar'
+args = ['hadoop jar ' + mrStreaming +
+                ' -Dmapreduce.job.reduces=' + "32" +
+                ' -files ' + folderFile +
+                ' -input ' + inputFile +
+                ' -output ' + outFile +
+                ' -mapper ' + MapScript +
+                ' -reducer ' + RedScript]
+subprocess.check_call(args, shell=True)
+
+# Find the Napa Valley Region
+findEntry('38.490:-122.340', 'standardCombSolarData', col=0, delim='\t')
+
+napaRecord = ""
+
+# Run cosine sim measure
+cosineSim(napaRecord, 'standardCombSolarData')
+
+# Final code is in the /user/cjg507/cosineSim folder
 
 
-#findEntry('38.490:-122.340', 'widenedSolarData', col=0, delim='\t')
 
-napaRecord = "38.490:-122.340	614.0	88.7284946237	752.0	109.200892857	899.0	188.169354839	991.0	228.975	1014.0	311.825268817	1030.0	332.205555556	1035.0	351.349462366	954.0	289.89516129	846.0	225.158333333	797.0	185.834677419	608.0	100.65	524.0	104.825268817"
-cosineSim(napaRecord, 'widenedSolarData')
 
