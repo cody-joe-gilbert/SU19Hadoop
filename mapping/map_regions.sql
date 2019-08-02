@@ -8,7 +8,7 @@ CREATE TABLE soil_areas AS
 	SELECT lkey, areasymbol, areaname, mlraoffice, (mbrminx + mbrmaxx) / 2.0 AS longitude, (mbrminy + mbrmaxy) / 2.0 AS latitude 
 	FROM legend; 
 
-# load weather regions 
+# load weather regions (note weather similarity data was separately processed in wrangle_weather_sim.sql)
 tail -n+2 weather_stations.txt > weather_stations_no_header.txt
 hdfs dfs -put weather_stations_no_header.txt /user/yjn214/rbda-proj
 CREATE TABLE weather_stations (usaf STRING, wban STRING, station_name STRING, ctry STRING, st STRING, call STRING, latitude FLOAT, longitude FLOAT, elev FLOAT, begin_dt STRING, end_dt STRING) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE;
@@ -30,10 +30,20 @@ CREATE TEMPORARY TABLE solar AS
 	SELECT solar_region_key, lkey
 	FROM solar_regions;  
 
-CREATE TEMPORARY TABLE weather AS 
-	SELECT CONCAT(usaf, '-', wban) AS station_id, station_name, radians(latitude) AS lat_w, radians(longitude) AS long_w 
-	FROM weather_stations 
-	WHERE ctry='US' AND latitude IS NOT NULL AND longitude IS NOT NULL; 
+-- CREATE TABLE weather AS 
+-- 	SELECT CONCAT(usaf, '-', wban) AS station_id, station_name, radians(latitude) AS lat_w, radians(longitude) AS long_w 
+-- 	FROM weather_stations 
+-- 	WHERE ctry='US' AND latitude IS NOT NULL AND longitude IS NOT NULL; 
+
+CREATE TABLE weather AS 
+	SELECT t1.station_id, station_name, lat_w, long_w  
+	FROM 
+		(SELECT CONCAT(usaf, '-', wban) AS station_id, station_name, radians(latitude) AS lat_w, radians(longitude) AS long_w 
+		FROM weather_stations w
+		WHERE ctry='US' AND latitude IS NOT NULL AND longitude IS NOT NULL) t1
+	INNER JOIN 
+		(SELECT station_id FROM weather_sim WHERE weather_sim_2010 IS NOT NULL) t2 
+	ON t1.station_id = t2.station_id; 
 
 CREATE TABLE soil_weather AS 
 	SELECT lkey, station_id, dist 
@@ -66,5 +76,5 @@ INSERT INTO region_mapping_local
 SELECT lkey, station_id, solar_region_key, areaname, weather_station
 FROM region_mapping;
 
-hadoop fs -cat hdfs://dumbo/user/hive/warehouse/yjn214.db/region_mapping_local/* > $HOME/rbda-proj/region_mapping_local.txt
-scp yjn214@dumbo.hpc.nyu.edu:rbda-proj/region_mapping_local.txt .
+hadoop fs -cat hdfs://dumbo/user/hive/warehouse/yjn214.db/region_mapping_local/* > $HOME/rbda-proj/region_mapping_v2.txt
+scp yjn214@dumbo.hpc.nyu.edu:rbda-proj/region_mapping_v2.txt .
