@@ -9,38 +9,17 @@ beeline
 !connect jdbc:hive2://babar.es.its.nyu.edu:10000/
 use yjn214; 
 
-# copy files 
+# copy files (weather sim processed separately in wrangle_weather_sim.sql)
 hdfs dfs -cp /user/cjg507/cosineSim /user/yjn214/rbda-proj/solarSim
 hdfs dfs -cp /user/yjn214/rbda-proj/soil_cos_sim /user/yjn214/rbda-proj/soilSim 
--- hdfs dfs -cp /user/rf1316/cos_sim /user/yjn214/rbda-proj/weatherSim1
--- hdfs dfs -cp /user/rf1316/cos_sim2 /user/yjn214/rbda-proj/weatherSim2
 
 # create hive table schemas 
 CREATE EXTERNAL TABLE solar_sim (solar_region_key STRING, solar_sim FLOAT) ROW FORMAT DELIMITED FIELDS TERMINATED BY '\t' STORED AS TEXTFILE;
 CREATE EXTERNAL TABLE soil_sim (lkey STRING, soil_sim FLOAT) ROW FORMAT DELIMITED FIELDS TERMINATED BY '|' STORED AS TEXTFILE;
--- CREATE EXTERNAL TABLE weather_sim_1 (idx STRING, station_id STRING, decade STRING, weather_sim FLOAT) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE;
--- CREATE EXTERNAL TABLE weather_sim_2 (idx STRING, station_id STRING, decade STRING, weather_sim FLOAT) ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS TEXTFILE;
 
 # load data into hive 
 LOAD DATA INPATH 'hdfs:/user/yjn214/rbda-proj/solarSim' OVERWRITE INTO TABLE solar_sim; 
 LOAD DATA INPATH 'hdfs:/user/yjn214/rbda-proj/soilSim' OVERWRITE INTO TABLE soil_sim; 
--- LOAD DATA INPATH 'hdfs:/user/yjn214/rbda-proj/weatherSim1' OVERWRITE INTO TABLE weather_sim_1;
--- LOAD DATA INPATH 'hdfs:/user/yjn214/rbda-proj/weatherSim2' OVERWRITE INTO TABLE weather_sim_2;
-
-# wrangle weather sim data from long- to wide-format, with similarities for each decade as separate columns  
--- CREATE TABLE weather_sim AS 
--- 	SELECT station_id, 
--- 		AVG(CASE WHEN decade = '1990' THEN weather_sim ELSE NULL END) AS weather_sim_1990, 
--- 		AVG(CASE WHEN decade = '2000' THEN weather_sim ELSE NULL END) AS weather_sim_2000,
--- 		AVG(CASE WHEN decade = '2010' THEN weather_sim ELSE NULL END) AS weather_sim_2010,
--- 		AVG(CASE WHEN decade = 'future' THEN weather_sim ELSE NULL END) AS weather_sim_future
--- 	FROM
--- 		(SELECT station_id, decade, weather_sim 
--- 		FROM weather_sim_1 WHERE decade IN ('1990', '2000', '2010')
--- 		UNION ALL
--- 		SELECT station_id, CASE WHEN decade = '2010' THEN 'future' ELSE NULL END AS decade, weather_sim 
--- 		FROM weather_sim_2 WHERE decade = '2010') t
--- 	GROUP BY station_id;
 
 # join tables and compute final analytic 
 CREATE TABLE composite_sim AS 
@@ -79,8 +58,3 @@ FROM composite_sim;
 # move file from Hive/HDFS > Dumbo > local computer 
 hadoop fs -cat hdfs://dumbo/user/hive/warehouse/yjn214.db/composite_sim_local/* > $HOME/rbda-proj/composite_sim_local
 scp yjn214@dumbo.hpc.nyu.edu:rbda-proj/composite_sim_local composite_sim_v2.csv
-
-# check which mapped stations not in weather dataset 
-select count(distinct m.station_id) from region_mapping m 
-left join weather_sim_1 w ON m.station_id = w.station_id where w.station_id is null;
-
