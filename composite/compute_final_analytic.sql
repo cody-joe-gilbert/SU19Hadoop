@@ -1,8 +1,8 @@
 ### Compute composite similarity by taking weighted average of weather/solar/soil cosine similarities ### 
 
-## Note that unlike for soil and solar, weather similarity between Napa and each region is computed for each of 4 decades: 
-## 1990s, 2000s, 2010s, and future projected. To compute composite similarities for each decade, we take the weighted average 
-## between the relevant decade's weather similarity and the constant soil and solar radiation similarities. 
+## Note that unlike for soil and solar, weather similarity between Napa and each region is computed for each of 3 decades: 
+## 2000s, 2010s, and future projected. To compute composite similarities for each decade, we take the weighted average 
+## between the relevant decade's weather similarity and soil and solar radiation similarities (assumed to be constant across decades) 
 
 # login to hive 
 beeline 
@@ -24,16 +24,15 @@ LOAD DATA INPATH 'hdfs:/user/yjn214/rbda-proj/soilSim' OVERWRITE INTO TABLE soil
 # join tables and compute final analytic 
 CREATE TABLE composite_sim AS 
 	SELECT m.areaname, m.lkey, m.station_id, m.solar_region_key, m.weather_station AS station_name, a.latitude, a.longitude,
-		soil_sim, solar_sim, weather_sim_1990, weather_sim_2000, weather_sim_2010, weather_sim_future,
-		1/3*soil_sim + 1/3*solar_sim + 1/3*weather_sim_1990 AS comp_sim_1990,
+		soil_sim, solar_sim, weather_sim_2000, weather_sim_2010, weather_sim_future,
 		1/3*soil_sim + 1/3*solar_sim + 1/3*weather_sim_2000 AS comp_sim_2000, 
 		1/3*soil_sim + 1/3*solar_sim + 1/3*weather_sim_2010 AS comp_sim_2010,
 		1/3*soil_sim + 1/3*solar_sim + 1/3*weather_sim_future AS comp_sim_future
 	FROM region_mapping m 
-	LEFT JOIN soil_areas a ON a.lkey = m.lkey 
-	LEFT JOIN soil_sim sl ON sl.lkey = m.lkey 
-	LEFT JOIN solar_sim sa ON sa.solar_region_key = m.solar_region_key
-	LEFT JOIN weather_sim w ON w.station_id = m.station_id 
+	INNER JOIN soil_areas a ON a.lkey = m.lkey 
+	INNER JOIN soil_sim sl ON sl.lkey = m.lkey 
+	INNER JOIN solar_sim sa ON sa.solar_region_key = m.solar_region_key
+	INNER JOIN weather_sim w ON w.station_id = m.station_id 
 	ORDER BY comp_sim_2010 DESC;  
 
 # replicate schema, populate single row with column headings 
@@ -44,17 +43,15 @@ STORED as textfile
 AS 
 SELECT 'areaname' AS areaname, 'lkey' AS lkey, 'station_id' AS station_id, 'solar_region_key' AS solar_region_key, 
 'station_name' AS station_name, 'latitude' AS latitude, 'longitude' AS longitude, 'soil_sim' AS soil_sim, 'solar_sim' AS solar_sim, 
-'weather_sim_1990' AS weather_sim_1990, 'weather_sim_2000' AS weather_sim_2000, 'weather_sim_2010' AS weather_sim_2010, 
-'weather_sim_future' AS weather_sim_future, 'comp_sim_1990' AS comp_sim_1990, 'comp_sim_2000' AS comp_sim_2000, 
-'comp_sim_2010' AS comp_sim_2010, 'comp_sim_future' AS comp_sim_future;
+'weather_sim_2000' AS weather_sim_2000, 'weather_sim_2010' AS weather_sim_2010, 'weather_sim_future' AS weather_sim_future, 
+'comp_sim_2000' AS comp_sim_2000, 'comp_sim_2010' AS comp_sim_2010, 'comp_sim_future' AS comp_sim_future;
 
 # fill in rest of table with data from Hive table 
 INSERT INTO composite_sim_local
-SELECT areaname, lkey, station_id, solar_region_key, station_name, latitude, longitude,
-soil_sim, solar_sim, weather_sim_1990, weather_sim_2000, weather_sim_2010, weather_sim_future,
-comp_sim_1990, comp_sim_2000, comp_sim_2010, comp_sim_future
+SELECT areaname, lkey, station_id, solar_region_key, station_name, latitude, longitude, soil_sim, solar_sim, 
+weather_sim_2000, weather_sim_2010, weather_sim_future, comp_sim_2000, comp_sim_2010, comp_sim_future
 FROM composite_sim;
 
 # move file from Hive/HDFS > Dumbo > local computer 
 hadoop fs -cat hdfs://dumbo/user/hive/warehouse/yjn214.db/composite_sim_local/* > $HOME/rbda-proj/composite_sim_local
-scp yjn214@dumbo.hpc.nyu.edu:rbda-proj/composite_sim_local composite_sim_v2.csv
+scp yjn214@dumbo.hpc.nyu.edu:rbda-proj/composite_sim_local composite_sim_vF.csv

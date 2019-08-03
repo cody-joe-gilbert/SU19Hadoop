@@ -30,11 +30,6 @@ CREATE TEMPORARY TABLE solar AS
 	SELECT solar_region_key, lkey
 	FROM solar_regions;  
 
--- CREATE TABLE weather AS 
--- 	SELECT CONCAT(usaf, '-', wban) AS station_id, station_name, radians(latitude) AS lat_w, radians(longitude) AS long_w 
--- 	FROM weather_stations 
--- 	WHERE ctry='US' AND latitude IS NOT NULL AND longitude IS NOT NULL; 
-
 CREATE TABLE weather AS 
 	SELECT t1.station_id, station_name, lat_w, long_w  
 	FROM 
@@ -42,7 +37,7 @@ CREATE TABLE weather AS
 		FROM weather_stations w
 		WHERE ctry='US' AND latitude IS NOT NULL AND longitude IS NOT NULL) t1
 	INNER JOIN 
-		(SELECT station_id FROM weather_sim WHERE weather_sim_2010 IS NOT NULL) t2 
+		(SELECT station_id FROM weather_sim) t2 
 	ON t1.station_id = t2.station_id; 
 
 CREATE TABLE soil_weather AS 
@@ -76,5 +71,5 @@ INSERT INTO region_mapping_local
 SELECT lkey, station_id, solar_region_key, areaname, weather_station
 FROM region_mapping;
 
-hadoop fs -cat hdfs://dumbo/user/hive/warehouse/yjn214.db/region_mapping_local/* > $HOME/rbda-proj/region_mapping_v2.txt
-scp yjn214@dumbo.hpc.nyu.edu:rbda-proj/region_mapping_v2.txt .
+hadoop fs -cat hdfs://dumbo/user/hive/warehouse/yjn214.db/region_mapping_local/* > $HOME/rbda-proj/region_mapping_vF.txt
+scp yjn214@dumbo.hpc.nyu.edu:rbda-proj/region_mapping_vF.txt .
