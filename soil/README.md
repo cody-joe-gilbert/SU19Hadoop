@@ -29,6 +29,8 @@ Our unit of analysis is at the soil area level, but since most of the soil attri
 | Component | /user/yjn214/rbda-proj/component.txt | cokey | 1188424 | 
 | Horizon | /user/yjn214/rbda-proj/chorizon.txt | chkey | 3748010 | 
 
+Data schemas may be found [here](ingest_data/Table%20schemas%20for%20soil%20database.pdf). 
+
 ## HDFS Output Data
 
 Below are the output tables in HDFS and Hive that are of interest: 
