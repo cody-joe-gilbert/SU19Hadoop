@@ -24,14 +24,16 @@ Our unit of analysis is at the soil area level, but since most of the soil attri
 
 | Soil Hierarchy Level | HDFS File Path | Primary Key | Number of Rows | 
 | ----------- | ----------- | ----------- | ----------- |
-| Soil Area | /user/yjn214/rbda-proj/legend.txt | lkey | xxx | 
-| Map Unit | /user/yjn214/rbda-proj/mapunit.txt | lkey | xxx | 
-| Component | /user/yjn214/rbda-proj/component.txt | lkey | xxx | 
-| Horizon | /user/yjn214/rbda-proj/chorizon.txt | lkey | xxx | 
+| Soil Area | /user/yjn214/rbda-proj/legend.txt | lkey | 3266 | 
+| Map Unit | /user/yjn214/rbda-proj/mapunit.txt |  mukey | 320288 | 
+| Component | /user/yjn214/rbda-proj/component.txt | cokey | 1188424 | 
+| Horizon | /user/yjn214/rbda-proj/chorizon.txt | chkey | 3748010 | 
 
 ## HDFS Output Data
 
-Below are the output tables in HDFS that are of interest: 
+Below are the output tables in HDFS and Hive that are of interest: 
 
-| Table Content | HDFS File Path | 
-| ----------- | ----------- | 
+| Table Content | HDFS File Path | Hive Table | 
+| ----------- | ----------- | ----------- | 
+| Soil Area Features | hdfs://dumbo/user/yjn214/rbda-proj/soil_features_local | yjn214.db/soil_features | 
+| Soil Area Cosine Similarities | hdfs://dumbo/user/yjn214/rbda-proj/soil_cos_sim | yjn214.db/soil_sim |  
