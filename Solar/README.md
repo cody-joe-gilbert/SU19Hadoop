@@ -5,10 +5,12 @@ This folder contains the processing tools and select results of the NREL solar i
 ## Folders
 * `dataacquisition` contains the scripts for fetching NREL NSRDB data and output
 * `rawprofileresults` contains the results of running the profiler scripts on the raw (unmodified) NREL solar irradiance data.
+* `dataprocess` contains the tools used to featurize, standardize, and produce the
+output cosine similarities used for the combination codes.
 
 ## Data Files
-* `solarRegions.csv` lists the solar regions and year for which data was obtained. Provides a translation between the soil regions (SoilLat, SoilLon) and the solar regions (SolarLat, SolarLon).
-* `solarScheme.csv` contains the column names to each of the raw solar data columns within `solarData.csv`
+* `solarRegionsV2.csv` lists the solar regions and year for which data was obtained. Provides a translation between the soil regions (SoilLat, SoilLon) and the solar regions (SolarLat, SolarLon), as well as the soil and solar region keys.
+
 
 ## HDFS Data
 * Full Solar Data Set: `/user/cjg507/solarData.csv` 
