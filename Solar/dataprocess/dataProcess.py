@@ -27,6 +27,7 @@ import HadoopTools as ht
 import subprocess
 from findEntry import findEntry
 from cosineSim import cosineSim
+from normalizer import normalize
 
 schema = {1: "Year",
           2: "Month",
@@ -102,7 +103,7 @@ months = {1: "JAN",
 runner = ht.runHadoop()
 runner.verbose = False
 
-# Run first-pass Widen MapReduce execution
+# Run Widen MapReduce execution
 inputFile = '/user/cjg507/solarData.csv'
 widenMapScript = './widenDataMap.py'
 widenRedScript = './widenDataRed.py'
@@ -117,51 +118,18 @@ runner.MapReduce(inpFile=inputFile,
                 NumReducers=32)
 runner.tail()
 
-# Standardize the data
+# 2. Standardize the data
 # Run first-pass MapReduce standardizer execution
-# Broken from standard form to suppose shell script passing
-inputFile = 'widenedSolarData'
-MapScript = 'src_norm/m_norm.sh'
-RedScript = 'src_norm/r_norm.sh'
-folderFile = 'src_norm/'
-outFile='standardSolarData'
-outputLogFile = './standardData.log'
-hLibPath = '/opt/cloudera/parcels/CDH-5.15.0-1.cdh5.15.0.p0.21/lib'
-mrStreaming = hLibPath + '/hadoop-mapreduce/hadoop-streaming.jar'
-args = ['hadoop jar ' + mrStreaming +
-                ' -Dmapreduce.job.reduces=' + "32" +
-                ' -files ' + folderFile +
-                ' -input ' + inputFile +
-                ' -output ' + outFile +
-                ' -mapper ' + MapScript +
-                ' -reducer ' + RedScript]
-subprocess.check_call(args, shell=True)
+normalize('widenedSolarData', outputFileName='normalizedData.txt')
 
-# # Run second-pass MapReduce execution to combine standard data
-inputFile = 'widenedSolarData'
-MapScript = 'src_norm/m_norm.sh'
-RedScript = 'src_norm/r_norm.sh'
-folderFile = 'src_norm/'
-outFile='standardSolarData'
-outputLogFile = './standardData.log'
-hLibPath = '/opt/cloudera/parcels/CDH-5.15.0-1.cdh5.15.0.p0.21/lib'
-mrStreaming = hLibPath + '/hadoop-mapreduce/hadoop-streaming.jar'
-args = ['hadoop jar ' + mrStreaming +
-                ' -Dmapreduce.job.reduces=' + "32" +
-                ' -files ' + folderFile +
-                ' -input ' + inputFile +
-                ' -output ' + outFile +
-                ' -mapper ' + MapScript +
-                ' -reducer ' + RedScript]
-subprocess.check_call(args, shell=True)
+# 3. Find the Napa Valley Region
+findEntry('38.490:-122.340', 'normalizedData.txt', col=0, delim='\t')
 
-# Find the Napa Valley Region
-findEntry('38.490:-122.340', 'standardCombSolarData', col=0, delim='\t')
-
-napaRecord = ""
+# Manually extracted the found record and saved it here
+napaRecord = "38.490:-122.340	0.00171890977448	0.00230439541134	-2.38317978263e-05	-0.0227766991366	0.00382018477176	0.0101478892018	0.00554773773839	0.00736921686519	-0.00446692033644	1.55821507088	0.398772538133	1.36635689491	1.42750376139	0.107808084168	-0.00487656840727	0.108494130318	-0.0160872218123	0.037150271015	0.00533278793883	0.0279732395641	-0.000258106253352	-0.00490120032865	-0.00012773996492	0.0321215193727"
 
 # Run cosine sim measure
-cosineSim(napaRecord, 'standardCombSolarData')
+cosineSim(napaRecord, 'normalizedData.txt')
 
 # Final code is in the /user/cjg507/cosineSim folder
 
