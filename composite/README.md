@@ -31,7 +31,7 @@ Cosine similarities for soil, weather, and solar regions as computed from previo
 | Soil Similarities | /user/yjn214/rbda-proj/soil_cos_sim | yjn214.db/soil_sim | 
 | Solar Similarities | /user/cjg507/cosineSim | yjn214.db/solar_sim | 
 | Weather Similarities | /user/rf1316/cos_sim | yjn214.db/weather_sim_1 | 
-| Weather Similarities (with offset) | /user/rf1316/cos_sim2 | yjn214.db/weather_sim_2 | 
+| Weather Similarities (with 5 deg offset) | /user/rf1316/cos_sim2 | yjn214.db/weather_sim_2 | 
 
 ## HDFS Output Data
 
