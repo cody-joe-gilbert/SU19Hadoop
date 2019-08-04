@@ -2,6 +2,24 @@
 
 The main dataset is hosted by NOAA at https://www.ncdc.noaa.gov/isd and can be download via FTP. The total disk space after decompression is approximately 270GB.
 
+A sample line in the raw file looks like this:
+2019 06 29 21   227    65 10180   310    15     0 -9999 -9999 ./720997-99999-2019
+
+The fields are:
+- Year
+- Month
+- Day
+- Hour
+- Temperature (Celsius x 10)
+- Dew Point Temp (Celsius x 10)
+- Sea Level Pressur (Hectopascals x 10)
+- Wind Direction (Angle measured in a clockwise direction from true north)
+- Wind Speed (meters / second)
+- Sky Condition Total Coverage (the higher the number the more the overcast)
+- Liquid Precipitation Depth (1hr)
+- Liquid Precipitation Depth (6hr)
+- Station Identifier and Year (see station_id.txt for station lat/lon)
+
 ## Folders
 
 - src: map reduce program for featurizing Hive data that was generated from raw data
